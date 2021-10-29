@@ -48,6 +48,44 @@ def login():
     
     return render_template('index.html', msg=msg)
 
-
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+ # connect
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+  
+    # Xuất ra thông báo nếu có sự cố
+    msg = ''
+    # Kiểm tra xem các yêu cầu POST "tên người dùng", "mật khẩu" và "email" có tồn tại hay không
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
+        fullname = request.form['fullname']
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+   
+  #Kiểm tra account có tồn tại trong database không
+        cursor.execute('SELECT * FROM accounts WHERE username = %s', (username))
+        account = cursor.fetchone()
+        # Nếu tài khoản tồn tại 
+        if account:
+            msg = 'Account already exists!'
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            msg = 'Invalid email address!'
+        elif not re.match(r'[A-Za-z0-9]+', username):
+            msg = 'Username must contain only characters and numbers!'
+        elif not username or not password or not email:
+            msg = 'Please fill out the form!'
+        else:
+            # Nếu tài khoản không hợp lệ
+            cursor.execute('INSERT INTO accounts VALUES (NULL, %s, %s, %s, %s)', (fullname, username, password, email)) 
+            conn.commit()
+   
+            msg = 'You have successfully registered!'
+    elif request.method == 'POST':
+        # Nếu để trống 
+        msg = 'Please fill out the form!'
+    # Hiển thị biểu mẫu đăng ký
+    return render_template('register.html', msg=msg)
 if __name__ == '__main__':
     app.run(debug=True)
+    
