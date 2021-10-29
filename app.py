@@ -88,4 +88,24 @@ def register():
     return render_template('register.html', msg=msg)
 if __name__ == '__main__':
     app.run(debug=True)
-    
+
+
+@app.route('/')
+def home():
+    # Check if user is loggedin
+    if 'loggedin' in session:
+   
+        # User is loggedin show them the home page
+        return render_template('home.html', username=session['username'])
+    # User is not loggedin redirect to login page
+    return redirect(url_for('login'))
+  
+
+@app.route('/logout')
+def logout():
+    # Remove session data, this will log the user out
+   session.pop('loggedin', None)
+   session.pop('id', None)
+   session.pop('username', None)
+   # Redirect to login page
+   return redirect(url_for('login'))
