@@ -17,6 +17,7 @@ app.config['MYSQL_DATABASE_PASSWORD'] = 'NQfMa49wai'
 app.config['MYSQL_DATABASE_DB'] = 'WBgiOehDRJ'
 app.config['MYSQL_DATABASE_HOST'] = 'remotemysql.com'
 mysql.init_app(app)
+
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
  # connect databse
@@ -110,7 +111,7 @@ def logout():
    # Redirect to login page
    return redirect(url_for('login'))
 
-   @app.route('/profile')
+@app.route('/profile')
 def profile(): 
  # Check if account exists using MySQL
     conn = mysql.connect()
