@@ -17,6 +17,7 @@ app.config['MYSQL_DATABASE_PASSWORD'] = 'NQfMa49wai'
 app.config['MYSQL_DATABASE_DB'] = 'WBgiOehDRJ'
 app.config['MYSQL_DATABASE_HOST'] = 'remotemysql.com'
 mysql.init_app(app)
+
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
  # connect databse
@@ -86,8 +87,7 @@ def register():
         msg = 'Please fill out the form!'
     # Hiển thị biểu mẫu đăng ký
     return render_template('register.html', msg=msg)
-if __name__ == '__main__':
-    app.run(debug=True)
+
 
 
 @app.route('/')
@@ -125,3 +125,8 @@ def profile():
         return render_template('profile.html', account=account)
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
